@@ -4,9 +4,12 @@ import asyncio
 import base64
 import json
 import openai
+from dotenv import dotenv_values
 
-auth_key = "6086a4083a6c4c3a912c0fb916f78a85"
-openai.api_key = "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"
+config = dotenv_values("../.env")
+
+auth_key = config["ASSEMBLY_AI_KEY"]
+openai.api_key = config["OPEN_AI_KEY"]
  
 FRAMES_PER_BUFFER = 3200
 FORMAT = pyaudio.paInt16
