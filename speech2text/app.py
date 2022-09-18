@@ -1,3 +1,5 @@
+from flask import Flask
+
 import pyaudio
 import websockets
 import asyncio
@@ -6,7 +8,7 @@ import json
 import openai
 from dotenv import dotenv_values
 
-config = dotenv_values(".env")
+config = dotenv_values("../.env")
 
 auth_key = config["ASSEMBLY_AI_KEY"]
 openai.api_key = config["OPEN_AI_KEY"]
@@ -15,6 +17,9 @@ FRAMES_PER_BUFFER = 3200
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 48000
+
+app = Flask(__name__)
+
 p = pyaudio.PyAudio()
  
 # starts recording
@@ -29,6 +34,11 @@ stream = p.open(
 # the AssemblyAI endpoint we're going to hit
 URL = "wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000"
  
+@app.route("/startListening")
+def startListening():
+    asyncio.run(send_receive())
+
+
 async def send_receive():
    print(f'Connecting websocket to url ${URL}')
    async with websockets.connect(
@@ -86,6 +96,3 @@ def clean_string(str_to_read):
             temperature=0, 
             max_tokens=60)
         print(f"Response: {response.choices[0].text}")
-
-
-asyncio.run(send_receive())
