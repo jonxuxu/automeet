@@ -6,7 +6,7 @@ import json
 import openai
 from dotenv import dotenv_values
 
-config = dotenv_values("../.env")
+config = dotenv_values(".env")
 
 auth_key = config["ASSEMBLY_AI_KEY"]
 openai.api_key = config["OPEN_AI_KEY"]
